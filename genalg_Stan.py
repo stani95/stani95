@@ -47,6 +47,7 @@ for i in range (0,6):
 		subs.append(result)
 		print "The longest subsequence of", i, "and", j, "is", result, "."
 
+#Problem 2.
 #Print the results in a nice table format.
 subs=[]
 for i in range (-1,7):
