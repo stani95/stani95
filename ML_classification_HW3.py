@@ -45,7 +45,7 @@ frames2 = [accepted_test, rejected_test]
 data_frame_test = pd.concat(frames2).reset_index(drop=True)
 
 #Replacing the string for employment length with a numeric variable for the training set.
-data_frame=data_frame.replace(to_replace='n/a', value=0.0)
+data_frame=data_frame.replace(to_replace='n/a', value=np.nan)
 data_frame=data_frame.replace(to_replace='< 1 year', value=0.5)
 data_frame=data_frame.replace(to_replace='1 year', value=1.0)
 data_frame=data_frame.replace(to_replace='2 years', value=2.0)
@@ -59,7 +59,7 @@ data_frame=data_frame.replace(to_replace='9 years', value=9.0)
 data_frame=data_frame.replace(to_replace='10+ years', value=10.0)
 
 #Replacing the string for employment length with a numeric variable for the test set.
-data_frame_test=data_frame_test.replace(to_replace='n/a', value=0.0)
+data_frame_test=data_frame_test.replace(to_replace='n/a', value=np.nan)
 data_frame_test=data_frame_test.replace(to_replace='< 1 year', value=0.5)
 data_frame_test=data_frame_test.replace(to_replace='1 year', value=1.0)
 data_frame_test=data_frame_test.replace(to_replace='2 years', value=2.0)
@@ -72,14 +72,22 @@ data_frame_test=data_frame_test.replace(to_replace='8 years', value=8.0)
 data_frame_test=data_frame_test.replace(to_replace='9 years', value=9.0)
 data_frame_test=data_frame_test.replace(to_replace='10+ years', value=10.0)
 
+print data_frame
+print "----"
+print data_frame_test
+print '----'
+data_frame.dropna(axis=0, how='any', inplace=True)
+data_frame_test.dropna(axis=0, how='any', inplace=True)
+print data_frame
+print "----"
+print data_frame_test
+print '----'
+
 #I want to choose the optimal K for best results. I try values of K between 2 and 19.
 
 K=[]
 for i in range(2,20):
 	K.append(i)
-
-#number of samples is 999
-n_samples = 999
 
 #I record the maximum accuracy that the model yields on the test set, as well as the optimal K that produces that maximum accuracy.
 max_accuracy=0
