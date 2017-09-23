@@ -82,8 +82,8 @@ K=[]
 for i in range(2,20):
 	K.append(i)
 
-#I record the maximum accuracy that the model yields on the test set, as well as the optimal K that produces that maximum accuracy.
-max_accuracy=0
+#I record the maximum precision that the model yields on the test set, as well as the optimal K that produces that maximum precision.
+max_precision=0
 optimal_K=3
 
 
@@ -103,10 +103,11 @@ for i in range(18):
 	    % (classifier, metrics.classification_report(expected, predicted)))
 	print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
 	print("Accuracy:\n%s" % metrics.accuracy_score(expected, predicted))
+	print("Precision:\n%s" % metrics.precision_score(expected, predicted))
 
-	#Comparing the accuracy to the previous max accuracy and replacing if it is larger.
-	if metrics.accuracy_score(expected, predicted)>max_accuracy:
-		max_accuracy=metrics.accuracy_score(expected, predicted)
+	#Comparing the precision to the previous max precision and replacing if it is larger.
+	if metrics.precision_score(expected, predicted)>max_precision:
+		max_precision=metrics.precision_score(expected, predicted)
 		optimal_K=K[i]
 
 #After finding the optimal K, I train the model once again with that value of K:
@@ -157,6 +158,7 @@ print("Classification report for classifier %s:\n%s\n"
 	% (classifier, metrics.classification_report(expected, predicted)))
 print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
 print("Accuracy:\n%s" % metrics.accuracy_score(expected, predicted))
+print("Precision:\n%s" % metrics.precision_score(expected, predicted))
 
 #FINAL RESULT:
 print "RESULT:"
