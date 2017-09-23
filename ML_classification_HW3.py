@@ -72,16 +72,9 @@ data_frame_test=data_frame_test.replace(to_replace='8 years', value=8.0)
 data_frame_test=data_frame_test.replace(to_replace='9 years', value=9.0)
 data_frame_test=data_frame_test.replace(to_replace='10+ years', value=10.0)
 
-print data_frame
-print "----"
-print data_frame_test
-print '----'
+#Exclude the applicants with unknown employment length.
 data_frame.dropna(axis=0, how='any', inplace=True)
 data_frame_test.dropna(axis=0, how='any', inplace=True)
-print data_frame
-print "----"
-print data_frame_test
-print '----'
 
 #I want to choose the optimal K for best results. I try values of K between 2 and 19.
 
