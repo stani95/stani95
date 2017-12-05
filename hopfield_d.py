@@ -5,10 +5,6 @@ import random
 random.seed(0)
 np.random.seed(0)
 
-aa=range(1,5)
-print aa
-print aa[1:len(aa)-1]
-
 maximums = []
 for I in range(5,100):
 	print "I=", I
