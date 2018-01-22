@@ -50,7 +50,6 @@ class Forest(object):
             for y in xrange(self.n):
             	if self.state[x, y] == 1 or self.state[x, y] == 2:
             		self.total_num_trees += 1
-        #self.density_history = [self.config.mean()]
 
     def observe(self):
         pylab.cla()
