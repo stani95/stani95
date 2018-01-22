@@ -56,7 +56,6 @@ class Forest(object):
         pylab.subplot(1, 2, 1)
         pylab.pcolor(self.state, vmin = 0, vmax = 3, cmap = pylab.cm.binary)
         pylab.axis('image')
-        #pylab.title('t = ' + str(time))
         pylab.subplot(1, 2, 2)
         pylab.plot(self.burned_area_list)
         pylab.ylim(0, 1)
