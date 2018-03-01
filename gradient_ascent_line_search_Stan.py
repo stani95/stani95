@@ -28,7 +28,7 @@ def A_der_theta(b,theta,W):
 def find_negative(h_prime):
 
 	#This should never happen because when following the gradient direction,
-	#we should be clumbing up:
+	#we should be climbing up:
 	if h_prime(0) < 0:
 		print "ERROR"
 		print "The value", h_prime(0), "should be positive and it is not!!!"
