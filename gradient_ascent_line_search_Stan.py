@@ -76,7 +76,7 @@ def bisection(h_prime):
 			return (right_end + left_end)/2.0
 
 # The gradient ascent with line search algorithm:
-def gradient_descent(f,f_der_b,f_der_theta,b_current,theta_current,W):
+def gradient_descent(A,A_der_b,A_der_theta,b_current,theta_current,W):
 
 	#I am comparing the new function value with the previous one,
 	#and I stop the algorithm once they become equal (no improvement)
