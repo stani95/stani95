@@ -117,6 +117,16 @@ c = choose_c()
 #The chosen c is [0,0,1,1,0,1,1,1,0,0,1] = [c_{10},c_9,c_8,...,c_1,c_0]
 #, which corresponds to the following polynomial: p(x) = x^11 + x^8 + x^7 + x^5 + x^4 + x^3 + 1.
 
+#This part uses brute force to solve a linear system of equations is GF(2):
+#matrix*vector1 = vector2. The function checks if vector1 is a solution.
+def check_matrix_equation(matrix, vector1, vector2):
+	vector3 = [[matrix.dot(vector1)[i]%2] for i in range(len(vector1))]
+	equal = True
+	for i in range(len(vector3)):
+		if vector3[i] != vector2[i]:
+			equal = False
+	return equal
+
 #The following function takes an element n of F and outputs its trace.
 def find_trace(c,n):
 	if len(c)!=len(n):
@@ -162,7 +172,14 @@ matrix_traces = np.array([[traces[i+j] for j in range(len(c))] for i in range(le
 
 #Solving the system of linear equations modulo 2:
 #These are the coefficients of b_0 written in the basis [1,alpha,...,alpha^(10)]
-result = [round(abs(i)) for i in inv(matrix_traces).dot(vector_bin_secret)][::-1]
+
+#This is a list of all 2048 binary sequences of length 11: all the candidate solutions.
+all_binary_sequences = [[int(seq[i]) for i in range(len(c))] for seq in itertools.product("01", repeat=len(c))]
+
+for i in range(2**len(c)):    #Checking if each such sequence is a solution:
+	result_guess=[[all_binary_sequences[i][j]] for j in range(len(c))]
+	if check_matrix_equation(matrix_traces, result_guess, vector_bin_secret):
+		result = [result_guess[i][0] for i in range(len(result_guess))][::-1]
 
 #The following function takes an element result and finds i: alpha^i=result
 def find_power_of_alpha(c, result):
@@ -214,16 +231,6 @@ guess_for_z = [(guess[i]+ciphertext[i])%2 for i in range(len(guess))]
 #Eve now has 11 linear equations with 11 unknowns c = [c_{10},...,c_0]. She sets up the system:
 LHS_matrix_guess = np.array([[guess_for_z[i+j] for j in range(len(c))] for i in range(len(c))])
 RHS_vector_guess = np.array([[guess_for_z[len(c)+i]] for i in range(len(c))])
-
-#This part uses brute force to solve a linear system of equations is GF(2):
-#matrix*vector1 = vector2. The function checks if vector1 is a solution.
-def check_matrix_equation(matrix, vector1, vector2):
-	vector3 = [[matrix.dot(vector1)[i]%2] for i in range(len(vector1))]
-	equal = True
-	for i in range(len(vector3)):
-		if vector3[i] != vector2[i]:
-			equal = False
-	return equal
 
 #This is a list of all 2048 binary sequences of length 11: all the candidate solutions.
 all_binary_sequences = [[int(seq[i]) for i in range(len(c))] for seq in itertools.product("01", repeat=len(c))]
