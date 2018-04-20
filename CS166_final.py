@@ -52,6 +52,9 @@ class Delivery_Network:
     def get_total(self):
         return self.total_num_packages
 
+    def get_time(self):
+        return self.time
+
     def initialize(self):
         self.graph = nx.barabasi_albert_graph(self.network_size, self.m)
         edges = self.graph.edges
@@ -225,7 +228,7 @@ plt.figure()
 sim.observe_init()
 for i in range(10000):
     if sim.get_total()==sim.get_delivered():
-        print "SUCCESS"
+        print "SUCCESS in", sim.get_time(), "steps"
         break
     sim.update()
     if i%3==2:
