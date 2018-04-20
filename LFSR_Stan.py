@@ -11,12 +11,12 @@ g = 19      #The generator (base)
 
 #Private information:
 x_1 = 113    #Alice's power
-x_1 = 57    #Bob's power
+x_2 = 57    #Bob's power
 
 #Transmitted information:
-transmitted1 = 19**113 % 2017    #From Alice to Bob
-transmitted2 = 19**57 % 2017    #From Bob to Alice
-shared_message = int(transmitted2**113 %2017)    #The shared secret
+transmitted1 = g**x_1 % N    #From Alice to Bob
+transmitted2 = g**x_2 % N    #From Bob to Alice
+shared_message = int(transmitted2**x_1 % N)    #The shared secret
 
 #Converting the shared secret to a binary sequence:
 binary_secret=[]
