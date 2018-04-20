@@ -301,16 +301,6 @@ guess_for_z = [(guess[i]+ciphertext[i])%2 for i in range(len(guess))]
 LHS_matrix_guess = np.array([[guess_for_z[i+j] for j in range(len(c))] for i in range(len(c))])
 RHS_vector_guess = np.array([[guess_for_z[len(c)+i]] for i in range(len(c))])
 
-#This part uses brute force to solve a linear system of equations is GF(2):
-#matrix*vector1 = vector2. The function checks if vector1 is a solution.
-def check_matrix_equation(matrix, vector1, vector2):
-	vector3 = [[matrix.dot(vector1)[i]%2] for i in range(len(vector1))]
-	equal = True
-	for i in range(len(vector3)):
-		if vector3[i] != vector2[i]:
-			equal = False
-	return equal
-
 #This is a list of all 2048 binary sequences of length 11: all the candidate solutions.
 all_binary_sequences = [[int(seq[i]) for i in range(len(c))] for seq in itertools.product("01", repeat=len(c))]
 
