@@ -31,10 +31,10 @@ class Package:
 
 class Delivery_Network:
 
-    def __init__(self, network_size=10, max_capacity = 100, m = 3, max_duration = 3, max_packages = 20, saturation = 0.4, time = 0, active_nodes_list = [], active_edges_list_small_large = [], active_edges_list_large_small = [], delivered = 0, total_num_packages = 0, viz_pack = []):
+    def __init__(self, network_size=10, max_capacity = 100, m = 3, max_distance = 60, max_packages = 20, saturation = 0.4, time = 0, active_nodes_list = [], active_edges_list_small_large = [], active_edges_list_large_small = [], delivered = 0, total_num_packages = 0, viz_pack = []):
         self.network_size = network_size
         self.max_capacity = max_capacity
-        self.max_duration = max_duration
+        self.max_distance = max_distance
         self.m = m
         self.max_packages = max_packages
         self.saturation = saturation
@@ -68,12 +68,11 @@ class Delivery_Network:
             return copy_nodes_list
 
         for edge in edges:
-            self.graph.edges[edge]['max_capacity_small_large'] = np.random.randint(1,self.max_capacity)
-            self.graph.edges[edge]['max_capacity_large_small'] = np.random.randint(1,self.max_capacity)
+            self.graph.edges[edge]['max_capacity_small_large'] = np.random.randint(5,self.max_capacity)
+            self.graph.edges[edge]['max_capacity_large_small'] = np.random.randint(5,self.max_capacity)
             self.graph.edges[edge]['current_capacity_small_large'] = 0
             self.graph.edges[edge]['current_capacity_large_small'] = 0
-            self.graph.edges[edge]['duration'] = np.random.randint(1,self.max_duration)
-            self.graph.edges[edge]['distance'] = np.random.randint(1,100)
+            self.graph.edges[edge]['distance'] = np.random.randint(1,self.max_distance)
             self.graph.edges[edge]['packages_small_large'] = []
             self.graph.edges[edge]['packages_large_small'] = []
         for node in nodes:
@@ -229,6 +228,6 @@ for i in range(10000):
         print "SUCCESS"
         break
     sim.update()
-    if i%10==9:
+    if i%3==2:
         plt.figure()
         sim.observe()
