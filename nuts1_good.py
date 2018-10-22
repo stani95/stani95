@@ -218,7 +218,7 @@ for i in samples:
 #A plot of how the samples look like in the context of the negative-log distribution:
 x = np.linspace(0,10,1000)
 plt.plot(x, logdistr(x), color="BLACK", linewidth=2.0)
-plt.plot(samples, y_list_chain_two, 'ro', color='b')
+plt.plot(samples, y_list, 'ro', color='b')
 plt.show()
 
 #A histogram of the samples in the context of the target distribution:
