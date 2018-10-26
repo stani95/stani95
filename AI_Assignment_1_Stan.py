@@ -2,7 +2,6 @@ import numpy as np
 import copy
 import time
 
-
 #A Priority Queue Class:
 class PQ:
 
