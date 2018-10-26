@@ -522,7 +522,7 @@ print "Time to solve Example state 3 using the Manhattan heuristic:", end - star
 
 print "Testing a 4 x 4 example state with the Manhattan heuristic:"
 start = time.time()
-steps, frontierSize, err = solvePuzzle( n = 4, state = [[5,8,1,11],[0,2,13,10],[14,4,6,15],[12,7,9,3]], heuristic = heuristics[1], prnt = True)
+steps, frontierSize, err = solvePuzzle( n = 4, state = [[5,1,8,11],[0,2,13,10],[14,4,6,15],[12,7,9,3]], heuristic = heuristics[1], prnt = True)
 end = time.time()
 print "err =", err
 print "Time to solve a 4 x 4 example using the Manhattan heuristic:", end - start
