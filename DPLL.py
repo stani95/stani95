@@ -261,6 +261,7 @@ F = Literal("F")
 #Defining the KBs:
 KB1 = [{A,B},{A,-C},{-A,B,D}]
 KB2 = [{-A,B,E},{-B,A},{-E,A},{D,-E},{-B,-C,-F},{-E,B},{-B,F},{-B,C}]
+KB3 = [{-B,A},{A,C},{-C,B},{-A}]
 
 #Printing the results:
 print "----"
@@ -272,6 +273,12 @@ print "Model:", model
 print "----"
 
 (satisfiable, model) = DPLLSatisfiable(KB2)
+print "Satisfiable:", satisfiable
+print "Model:", model
+
+print "----"
+
+(satisfiable, model) = DPLLSatisfiable(KB3)
 print "Satisfiable:", satisfiable
 print "Model:", model
 
