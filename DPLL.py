@@ -2,20 +2,20 @@ import numpy as np
 
 class Literal:
 
-	def __init__(self, name, negated = False):
+	def __init__(self, name, sign = True):
 		self.name = name
-		self.negated = negated
-		#False means the literal is not negated (e.g. A)
-		#True means the literal is negated (e.g. -A)
+		self.sign = sign
+		#True means the literal is positive (e.g. A)
+		#False means the literal is negative (e.g. -A)
 
 	def __neg__(self):
-		return Literal(self.name, bool(1-self.negated))
+		return Literal(self.name, bool(1-self.sign))
 
 	def __str__(self):
-		return "Name = " + str(self.name) + " and Negated = " + str(self.negated)
+		return "Name = " + str(self.name) + " and Sign = " + str(self.sign)
 
-	def get_negated(self):
-		return self.negated
+	def get_sign(self):
+		return self.sign
 
 	def get_name(self):
 		return self.name
@@ -32,29 +32,27 @@ def DPLLSatisfiable(KB):
 				model[literal.get_name()] = "free"
 				#Initially, all values are "free"
 
-	#model is a dictionary. Its keys are the symbols in
+	#degrees is a dictionary. Its keys are the symbols in
 	#the KB that are still "free", and the values
-	#are the corresponding degrees for each symbol.
+	#are the corresponding degrees.
 	degrees = {}
-	for i in KB:
-		for j in i:
-			if j.get_name() not in degrees.keys():
-				degrees[j.get_name()] = 1
+	for clause in KB:
+		for literal in clause:
+			if literal.get_name() not in degrees.keys():
+				degrees[literal.get_name()] = 1
 			else:
-				degrees[j.get_name()] += 1
+				degrees[literal.get_name()] += 1
 
 	#Run DPLL
 	return DPLL(KB, model, degrees)
 
-#TruthValue takes a model and a literal,
-#where the symbol that corresponds to the literal
-#is not "free" in the model.
+#TruthValue takes a model and a literal.
 def TruthValue(model, literal):
 
-	if (model[literal.get_name()] == 'true' and literal.get_negated() == False) or (model[literal.get_name()] == 'false' and literal.get_negated() == True):
+	if (model[literal.get_name()] == 'true' and literal.get_sign() == True) or (model[literal.get_name()] == 'false' and literal.get_sign() == False):
 		return True
-		#It returns True if the literal is not negated and the symbol is assigned True,
-		#or if the literal is negated and the symbol is assigned False.
+		#It returns True if the literal is positive and the symbol is assigned True,
+		#or if the literal is negative and the symbol is assigned False.
 
 	else:
 		return False
@@ -63,7 +61,7 @@ def TruthValue(model, literal):
 #Given a KB and a model, findUnitClause returns
 #the literal that corresponds to a unit clause,
 #or -1 if such clause does not exist.
-def findUnitClause(KB,model):
+def findUnitClause(KB, model):
 
 	for clause in KB:
 		number = 0
@@ -90,10 +88,11 @@ def findUnitClause(KB,model):
 
 
 #Given a KB and a model, findPureSymbol returns
-#a dictionary with all pure sybmols and their
-#negation values (either negated or not negated).
-def findPureSymbol(KB,model):
-	negations = {}
+#a dictionary with sybmols and their signs.
+#The signs are positive (True) or negative (False)
+#for pure symbols and None for impure symbols.
+def findPureSymbol(KB, model):
+	signs = {}
 	for clause in KB:
 		flag = False
 
@@ -111,17 +110,17 @@ def findPureSymbol(KB,model):
 			if model[literal.get_name()] == 'free':
 
 				#All free literals whose symbol is not yet in the dictionary are added to it:
-				if literal.get_name() not in negations.keys():
-					negations[literal.get_name()] = literal.get_negated()
+				if literal.get_name() not in signs.keys():
+					signs[literal.get_name()] = literal.get_sign()
 
 				#All free literals whose symbol is already in the dictionary are
 				#checked for "purity". If they do not pass the test, I
 				#assign None to the corresponding symbol.
-				elif literal.get_negated() != negations[literal.get_name()]:
-					negations[literal.get_name()] = None
+				elif literal.get_sign() != signs[literal.get_name()]:
+					signs[literal.get_name()] = None
 
-	#Returning the dictionary of pure symbols. None values correspond to impure symbols.
-	return negations
+	#Returning the dictionary.
+	return signs
 
 
 #The DPLL function
@@ -156,7 +155,8 @@ def DPLL(KB, model, degrees):
 		if flag_clause == 'false':
 			return False, {}
 
-		#If at least one clause is 'free', then the KB is not currently satisfied by the model:
+		#If at least one clause is 'free',
+		#then the KB is not currently satisfied by the model (yet):
 		if flag_clause == 'free':
 			flag_KB = 'free'
 
@@ -172,11 +172,11 @@ def DPLL(KB, model, degrees):
 
 	#Invoking the pure symbol heuristic:
 
-	negations_dict = findPureSymbol(KB, model)
-	list_of_pure_symbols = [i for i in negations_dict if negations_dict[i]!=None]
+	signs_dict = findPureSymbol(KB, model)
+	list_of_pure_symbols = [i for i in signs_dict if signs_dict[i]!=None]
 
-	#If the list of pure symbols is long, we choose the
-	#symbol that has the highest degree:
+	#If the list of pure symbols is long, we choose to
+	#assign a truth value to the symbol that has the highest degree:
 	if len(list_of_pure_symbols) > 1:
 
 		#Creating a dictionary with the pure symbols as keys
@@ -193,10 +193,10 @@ def DPLL(KB, model, degrees):
 	if len(list_of_pure_symbols)!=0:
 		pureSymbol = list_of_pure_symbols[0]
 		del degrees[pureSymbol]
-		if negations_dict[pureSymbol] == False:
-			model[pureSymbol] = 'true'    #Assign 'true' if not negated
+		if signs_dict[pureSymbol] == True:
+			model[pureSymbol] = 'true'    #Assign 'true' if the literals are positive
 		else:
-			model[pureSymbol] = 'false'    #Assign 'false' if negated
+			model[pureSymbol] = 'false'    #Assign 'false' if the literals are negative
 		return DPLL(KB, model, degrees)    #Recursively call DPLL with the new model
 
 	#Invoking the unit clause heuristic:
@@ -207,10 +207,10 @@ def DPLL(KB, model, degrees):
 	#to the symbol of the literal in that clause:
 	if unitLiteral != -1:
 		del degrees[unitLiteral.get_name()]
-		if unitLiteral.get_negated() == False:
-			model[unitLiteral.get_name()] = 'true'    #Assign 'true' if not negated
+		if unitLiteral.get_sign() == True:
+			model[unitLiteral.get_name()] = 'true'    #Assign 'true' if the literal is positive
 		else:
-			model[unitLiteral.get_name()] = 'false'    #Assign 'false' if negated
+			model[unitLiteral.get_name()] = 'false'    #Assign 'false' if the literal is negative
 		return DPLL(KB, model, degrees)    #Recursively call DPLL with the new model
 
 	#If none of the two heuristics work, we need to select a symbol and branch it:
