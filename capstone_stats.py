@@ -463,7 +463,7 @@ hypothesis = 0.24 #--> needed for power of 0.85
 
 print "Power of a test with", min_sample_size, "participants in the smaller group, where the alternative hypothesis is an improvement of", hypothesis, ":", t.cdf(hypothesis/standard_error-t.ppf(1-alpha, min_sample_size-1),min_sample_size-1)
 
-pooled_SD = np.sqrt((((std_control*np.sqrt(len(control_group_scores))/np.sqrt(len(control_group_scores)-1))**2)*(len_control-1)+((std_treatment*np.sqrt(len(treatment_group_scores))/np.sqrt(len(treatment_group_scores)-1))**2)*(len_treatment-1))/(len_control+len_treatment-2))
+pooled_SD = np.sqrt(((std_control**2)*len_control+(std_treatment**2)*len_treatment)/(len_control+len_treatment-2))
 print "For this alternative hypothesis, Cohen's d=", hypothesis/pooled_SD, "which is very large. To capture smaller effect sizes, I need a larger sample size."
 
 print "Observed effect Cohen's d=", observed_treatment_effect/pooled_SD, "which is considered large."
